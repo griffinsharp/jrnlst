@@ -16,27 +16,26 @@ contract Editor is Ownable {
 
     // EVENTS ---
     // Emitted when article is first created.
-    event NewArticle(
+    event ArticlePosted(
         uint articleId,
-        string authorName,
-        string publicationName,
-        string datePosted
+        uint timePosted,
+        address indexed authoraddress,
+        address indexed publicationAddress
     );
 
     // Emitted when article is updated.
     event ArticleEdited(
         uint articleId,
-        string authorName,
-        string publicationName,
-        string dateUpdated
+        uint timeUpdated,
+        address indexed authorAddress,
+        address indexed publicationAddress
     );
 
     struct Article {
         address authorAddress;
-        string authorName;
-        string publicationName;
-        uint256 timePosted;
-        uint256 timeUpdated;
+        address publicationAddress;
+        uint timePosted;
+        uint timeUpdated;
     }
 
     // VARIABLES ---
@@ -45,10 +44,11 @@ contract Editor is Ownable {
     // Mapping of articleId to the author (address) of the article
     mapping(uint => address) articleIdToAuthor;
     // Mapping of articleId to IPFS hashes of the article.
-    // This is our version control mechanism. The article itself will not keep track of the text in state.
-    mapping(uint => address[]) articleIdToHashes;
+    mapping(uint => bytes32[]) articleIdToHashes;
     // Mapping of author address to the ids of each article they have authored.
     mapping(address => uint[]) authorAddressToArticles;
+    // Mapping of articleId to Publication's address
+    mapping(uint => address) articleIdToPublication;
 
     // MODIFIERS ---
     modifier onlyAuthor(uint _articleId) {
@@ -57,47 +57,45 @@ contract Editor is Ownable {
     }
 
     // PUBLIC FUNCTIONS ---
-
     /// @notice Posts a new article to IPFS
-    /// @dev IPFS Upload needs finishing***
-    /// @param _articleText The text written by the author to be uploaded to IPFS
-    /// @param _authorName The author of the article's name
-    /// @param _publicationName The name of the article's publisher, blog, etc.
-    /// @return N/A
-    function postArticle(string memory _articleText, string memory _authorName, string memory _publicationName) public {
-        // TO-DO: Run modifier to check for only accepted characters in _articleText
+    /// @dev
+    /// @param _articleHash IPFS hash of text written by the author
+    /// @param _publicationAddress Address of the publication
+    function postArticle(bytes32 _articleHash, address _publicationAddress) public {
+        // TO-DO: Run modifier to check for valid hash
+
         Article memory newArticle = Article({
             authorAddress: msg.sender,
-            authorName: _authorName,
-            publicationName: _publicationName,
+            publicationAddress: _publicationAddress,
             timePosted: block.timestamp,
             timeUpdated: 0
         });
 
-        // TO-DO: Upload articleText to IPFS.
-        // Get confirmation and store in variable named "ipfsUploadSuccessful"
-        // Store hash from IPFS in articleIdToHashes ---> articleIdToHashes[articleId].push(articleIpfsHash);
+        articles.push(newArticle);
+        uint256 articleId = (articles.length).sub(1);
 
-        if (ipfsUploadSuccessful) {
-            articles.push(newArticle);
+        _addArticleHash(articleId, _articleHash);
+        authorAddressToArticles[msg.sender].push(articleId);
+        articleIdToAuthor[articleId] = msg.sender;
 
-            // Sub one here bc an article's id should be it's position in the articles arr w/ base zero
-            uint256 articleId = (articles.length).sub(1);
-
-            articleIdToHashes[articleId].push(articleIpfsHash);
-            authorAddressToArticles[msg.sender].push(articleId);
-            articleIdToAuthor[articleId] = msg.sender;
-        }
-
-
+        emit ArticlePosted(articleId, block.timestamp, msg.sender, _publicationAddress);
     }
 
-    /// @notice Updates an article already uploaded to IPFS.
-    /// @dev Whole fn needs writing***. Does NOT call postArticle, but will share IPFS upload logic.
-    /// Once new version is uploaded ---> articleIdToHashes[_articleId].push(articleIpfsHash);
+    /// @notice Updates an article already uploaded to IPFS by adding new hash
+    /// @dev Only the author may call this fn.
     /// @param _articleId The id of the article being updated
-    /// @return N/A
-    function updateArticle(uint _articleId) public onlyAuthor(_articleId) {
+    /// @param _articleHash The hash of the new version of the article's text
+    function updateArticle(uint _articleId, bytes32 _articleHash) public onlyAuthor(_articleId) {
+        _addArticleHash(_articleId, _articleHash);
+        emit ArticleEdited(_articleId, block.timestamp, msg.sender, articleIdToPublication[_articleId]);
+    }
 
+    // PRIVATE FUNCTIONS ---
+    /// @notice Updates an article already uploaded to IPFS.
+    /// @dev
+    /// @param _articleId The id of the article
+    /// @param _articleHash The hash of the article's text
+    function _addArticleHash(uint _articleId, bytes32 _articleHash) private {
+        articleIdToHashes[_articleId].push(_articleHash);
     }
 }
