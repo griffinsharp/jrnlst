@@ -1,73 +1,80 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from 'react'
+import { Row, Col, Input, Button, Spin } from 'antd';
 import SimpleStorageContract from "./contracts/SimpleStorage.json";
 import getWeb3 from "./getWeb3";
-
+import client from './ipfs';
 import "./App.css";
 
-class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+const { TextArea } = Input;
 
-  componentDidMount = async () => {
-    try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
+function App() {
+  const [storageValue, setStorageValue] = useState(0);
+  const [web3, setWeb3] = useState();
+  const [accounts, setAccounts] = useState();
+  const [contract, setContract] = useState();
+  const [data, setData] = useState();
+  const [accountValue, setAccountValue] = useState(0);
+  const [sending, setSending] = useState(false);
 
-      // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
+  useEffect(()=>{
+    async function getWeb3Config() {
+      try {
+        // Get network provider and web3 instance.
+        const web3 = await getWeb3();
+  
+        // Use web3 to get the user's accounts.
+        const accounts = await web3.eth.getAccounts();
+  
+        // Get the contract instance.
+        const networkId = await web3.eth.net.getId();
+        const deployedNetwork = SimpleStorageContract.networks[networkId];
+        const instance = new web3.eth.Contract(
+          SimpleStorageContract.abi,
+          deployedNetwork && deployedNetwork.address,
+        );
 
-      // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
-      const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
-        deployedNetwork && deployedNetwork.address,
-      );
+        // Set web3, accounts, and contract to the state, and then proceed with an
+        // example of interacting with the contract's methods.
+        const weiBalance = await web3.eth.getBalance('0x453C1553f5a54ED7A9FEaD0Ed7F97aE8b47918b8');
+        const ethBalance = await web3.utils.fromWei(weiBalance, 'Ether');
 
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`,
-      );
-      console.error(error);
+        setWeb3(web3);
+        setAccounts(accounts);
+        setContract(instance);
+        setAccountValue(ethBalance);
+      } catch (error) {
+        // Catch any errors for any of the above operations.
+        alert(
+          `Failed to load web3, accounts, or contract. Check console for details.`,
+        );
+        console.error(error);
+      }
     }
-  };
+    getWeb3Config();
+  },[])
 
-  runExample = async () => {
-    const { accounts, contract } = this.state;
-
-    // Stores a given value, 5 by default.
-    await contract.methods.set(5).send({ from: accounts[0] });
-
-    // Get the value from the contract to prove it worked.
-    const response = await contract.methods.get().call();
-
-    // Update state with the result.
-    this.setState({ storageValue: response });
-  };
-
-  render() {
-    if (!this.state.web3) {
-      return <div>Loading Web3, accounts, and contract...</div>;
-    }
-    return (
+  return !web3 ? (
+    <div>Loading Web3, accounts, and contract...</div>
+  ) : (
+    <>
       <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 42</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
+        <div>{accountValue} ETH</div>
+        <div>Enter sensitive data:</div>
+        <div>
+          <TextArea style={{width: "60%", height: "600px"}} value={data} onChange={(e)=>{
+              setData(e.target.value)
+          }} />
+          <div>
+            <button style={{width:"60%"}} loading={false} size="large" shape="round" type="primary" onClick={async()=>{
+              console.log("uploading...")
+              const { cid } = await client.add(data);
+              console.log('cid: ', cid.toString());
+            }}>Upload to IPFS</button>
+          </div>
+        </div>
       </div>
-    );
-  }
+    </>
+  );
 }
 
 export default App;
