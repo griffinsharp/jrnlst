@@ -5,6 +5,7 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.2.0",
     "antd": "^4.16.10",
+    "bl": "^5.0.0",
     "ipfs-http-client": "^51.0.1",
     "react": "16.11.0",
     "react-dom": "16.11.0",

@@ -49,7 +49,7 @@ contract Editor is Ownable {
     address[] public publications;
 
     // Mapping of articleId to IPFS hashes of the article.
-    mapping(uint => bytes32[]) articleIdToHashes;
+    mapping(uint => bytes[]) articleIdToHashes;
     // Mapping of author address to the ids of each article they have authored.
     mapping(address => uint[]) authorAddressToArticleIds;
 
@@ -132,7 +132,7 @@ contract Editor is Ownable {
 
     // TO-DO:
     // Validates IPFS hash
-    modifier isValidHash(bytes32 _ipfsHash) {
+    modifier isValidHash(bytes memory _ipfsHash) {
         require(true, "Invalid IPFS hash provided.");
         _;
     }
@@ -163,7 +163,7 @@ contract Editor is Ownable {
     /// @param _articleHash IPFS hash of text written by the author
     /// @param _publicationAddress Address of the publication
     function postArticle(
-        bytes32 _articleHash,
+        bytes memory _articleHash,
         address _publicationAddress
     )
         public
@@ -212,7 +212,7 @@ contract Editor is Ownable {
     Debating adding it here to prevent rogue ex-official authors from sabotage editing, but I also want authors to have full autonomy over their work. */
     /// @param _articleId The id of the article being updated
     /// @param _articleHash The hash of the new version of the article's text
-    function updateArticle(uint _articleId, bytes32 _articleHash) public onlyAuthorOfArticle(_articleId) isValidHash(_articleHash) {
+    function updateArticle(uint _articleId, bytes memory _articleHash) public onlyAuthorOfArticle(_articleId) isValidHash(_articleHash) {
         _addArticleHash(_articleId, _articleHash);
         emit ArticleEdited(_articleId, block.timestamp, msg.sender, articles[_articleId].publicationAddress);
     }
@@ -235,7 +235,7 @@ contract Editor is Ownable {
     /// @dev
     /// @param _articleId The id of the article
     /// @param _articleHash The hash of the article's text
-    function _addArticleHash(uint _articleId, bytes32 _articleHash) private {
+    function _addArticleHash(uint _articleId, bytes memory _articleHash) private {
         articleIdToHashes[_articleId].push(_articleHash);
     }
 }
