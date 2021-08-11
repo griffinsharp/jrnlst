@@ -1,9 +1,7 @@
 
 import React, { Component } from 'react'
-
-import TextBox from './TextBox';
-
 import client from '../../utils/ipfs';
+import TextBox from './TextBox';
 
 class ArticleCreate extends Component {
   constructor(props) {
@@ -24,9 +22,8 @@ class ArticleCreate extends Component {
     try {
       console.log("uploading...")
       const file = await client.add(text);
-      const uploadedFile = await this.uploadFileToContract(file.path, this.state.articleName, this.state.publicationAddress);
 
-      console.log(uploadedFile);
+      this.uploadFileToContract(file.path, this.state.articleName, this.state.publicationAddress);
       this.setState({isLoading: false});
     } catch(e) {
       this.setState({isLoading: false});
@@ -34,8 +31,7 @@ class ArticleCreate extends Component {
     }
   }
 
-  // async needed?
-  async uploadFileToContract(articleCID, articleName, publicationAddress) {
+  uploadFileToContract(articleCID, articleName, publicationAddress) {
     const hexArticleCID = window.web3.utils.asciiToHex(articleCID)
     this.props.editorContract.methods.postArticle(hexArticleCID, articleName, publicationAddress).send({ from: this.props.account }).on('transactionHash', (hash) => {
       console.log('transactionHash: ', hash);
@@ -54,12 +50,13 @@ class ArticleCreate extends Component {
             placeholder="Enter the name of the article."
           />
         </div>
+        {/* TODO: Will want to have form validation here if we have time to prevent submissions with empty values, ask if they want to use 0x0 as a publisher, etc. */}
         <div>
           Publication Address:
           <input
             value={this.state.publicationAddress}
             onChange={(e) => this.setState({ publicationAddress: e.target.value })}
-            placeholder="Enter a registered publication's address. Use 0x000000000000000000000000000000000000dEaD if self-published."
+            placeholder="Use 0x0000000000000000000000000000000000000000 if self-published."
           />
         </div>
         <TextBox isLoading={this.state.isLoading} uploadFileToIPFS={this.uploadFileToIPFS} />

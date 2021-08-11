@@ -3,11 +3,10 @@ import { Route, Redirect, withRouter } from "react-router-dom";
 
 const genericAuthor = ({ account, component: Component, editorContract, exact, isAuthor, path }) => (
   <Route
-    account={account}
     path={path}
     exact={exact}
     render={
-      props => isAuthor() ? <Component {...props} editorContract={editorContract} /> : <Redirect to="/" />
+      props => isAuthor() ? <Component {...props} account={account} editorContract={editorContract} /> : <Redirect to="/" />
     }
   />
 );
