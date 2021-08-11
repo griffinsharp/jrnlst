@@ -5,9 +5,11 @@
   "dependencies": {
     "@openzeppelin/contracts": "^4.2.0",
     "antd": "^4.16.10",
+    "bl": "^1.2.2",
     "ipfs-http-client": "^51.0.1",
     "react": "16.11.0",
     "react-dom": "16.11.0",
+    "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.4",
     "web3": "1.2.2"
   },
