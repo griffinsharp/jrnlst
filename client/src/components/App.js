@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import ArticleCreateForm from './editor/ArticleCreateForm';
 import ArticleUpdateForm from './editor/ArticleUpdateForm';
 import Home from './Home';
 import NavBar from './nav/Navbar';
 
+import EditorContract from "../contracts/Editor.json";
 import {ProtectedAuthorRoute, GenericAuthorRoute} from '../utils/route_util';
 import Web3 from "web3";
-import EditorContract from "../contracts/Editor.json";
 
 import "../styles/App.css";
 
@@ -119,10 +119,22 @@ class App extends Component {
         <Router>
           <Switch>
             {/* Author Private Routes // Only SPECIFIC author should need to see these. */}
-            <ProtectedAuthorRoute getAccounts={this.getAccounts} component={ArticleUpdateForm} exact={true} path="/author/:author_address/articles/:id/edit" />
+            <ProtectedAuthorRoute
+              getAccounts={this.getAccounts}
+              component={ArticleUpdateForm}
+              exact={true}
+              path="/author/:author_address/articles/:id/edit"
+            />
 
             {/* Author Public Routes - Any author can access, but not publishers. */}
-            <GenericAuthorRoute component={ArticleCreateForm} editorContract={this.state.editorContract} exact={true} isAuthor={this.isAuthor} path="/author/articles/new" />
+            <GenericAuthorRoute
+              account={this.state.account}
+              component={ArticleCreateForm}
+              editorContract={this.state.editorContract}
+              exact={true}
+              isAuthor={this.isAuthor}
+              path="/author/articles/new"
+            />
 
             {/* Anyone can see. Just will want to pass a prop to conditionally render an "edit" button if author/publisher. */}
             {/* <Route exact path="/author/:author_address/articles" component={ArticleIndex} /> */}

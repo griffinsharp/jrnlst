@@ -117,12 +117,16 @@ contract Editor is Ownable {
     // Checks if user calling the function is on the publication's approved author list
     modifier isMemberOfPublication(address _publicationAddress) {
         bool isMember = false;
-        address[] memory approvedAuthors = publicationAddressToAuthors[_publicationAddress];
 
-        if (approvedAuthors.length > 0) {
-            for (uint i=0; i < approvedAuthors.length; i++) {
-                if (approvedAuthors[i] == msg.sender) {
-                    isMember = true;
+        if (_publicationAddress == address(0)) {
+            isMember = true;
+        } else {
+            address[] memory approvedAuthors = publicationAddressToAuthors[_publicationAddress];
+            if (approvedAuthors.length > 0) {
+                for (uint i=0; i < approvedAuthors.length; i++) {
+                    if (approvedAuthors[i] == msg.sender) {
+                        isMember = true;
+                    }
                 }
             }
         }
