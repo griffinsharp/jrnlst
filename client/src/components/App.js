@@ -78,7 +78,7 @@ class App extends Component {
       const ethBalance = await web3.utils.fromWei(weiBalance, 'Ether');
 
       this.setState({ web3: web3 });
-      this.setState({ accounts: accounts })
+      this.setState({ account: accounts[0] })
       this.setState({ accountValue: ethBalance });
     } catch (error) {
       // Catch any errors for any of the above operations.
