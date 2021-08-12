@@ -6,7 +6,7 @@ import TextBox from './TextBox';
 
 import './ArticleCreateForm.css';
 
-class ArticleCreate extends Component {
+class ArticleCreateForm extends Component {
   constructor(props) {
     super(props);
 
@@ -96,4 +96,4 @@ class ArticleCreate extends Component {
   }
 }
 
-export default ArticleCreate;
+export default ArticleCreateForm;
