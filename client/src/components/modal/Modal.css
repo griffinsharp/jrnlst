@@ -1,0 +1,40 @@
+.Modal--container {
+    width: 25vw;
+    min-height: 25vh;
+    background-color: white;
+    z-index: 6;
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    top: 35%;
+    border-radius: 5px;
+}
+
+.Modal--title{
+    text-align: center;
+    margin-top: 10px;
+}
+
+.Modal--body {
+    padding-left: 1vw;
+    padding-right: 1vw;
+    text-align: center;
+    overflow-wrap: break-word;
+}
+
+.Modal--txhash:hover {
+    text-decoration: underline;
+}
+
+.Modal--button {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 50%;
+    height: 30px;
+    cursor: pointer;
+}
+
+.Modal--button--container {
+    text-align: center;
+}

@@ -237,6 +237,12 @@ contract Editor is Ownable {
         return false;
     }
 
+    /// @notice Getter function for the articles
+    /// @dev Returns the public articles variable
+    function getArticles() public returns(Article[] memory) {
+        return articles;
+    }
+
     // PRIVATE FUNCTIONS ---
     /// @notice Updates an article already uploaded to IPFS.
     /// @dev
