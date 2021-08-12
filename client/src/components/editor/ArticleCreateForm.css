@@ -1,0 +1,21 @@
+.ArticleCreateForm--input {
+    min-width: 600px;
+}
+
+.ArticleCreateForm--flex--box {
+    display: flex;
+}
+
+.ArticleCreateForm--modal {
+    position: absolute;
+    top: -0px;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 4;
+}
+
+.ArticleCreateForm--button {
+    margin-left: 5px;
+    cursor: pointer;
+}
