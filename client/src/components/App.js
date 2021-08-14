@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import ArticleCreateForm from './editor/ArticleCreateForm';
+import ArticleIndex from './lists/ArticleIndex';
 import ArticleUpdateForm from './editor/ArticleUpdateForm';
 import Home from './Home';
 import NavBar from './nav/Navbar';
@@ -115,8 +116,8 @@ class App extends Component {
   render() {
     return (
       <div>
-        <NavBar/>
         <Router>
+          <NavBar account={this.state.account} />
           <Switch>
             {/* Author Private Routes // Only SPECIFIC author should need to see these. */}
             <ProtectedAuthorRoute
@@ -137,7 +138,13 @@ class App extends Component {
             />
 
             {/* Anyone can see. Just will want to pass a prop to conditionally render an "edit" button if author/publisher. */}
-            {/* <Route exact path="/author/:author_address/articles" component={ArticleIndex} /> */}
+            <Route
+              exact
+              path="/author/:author_address/articles"
+              render={props => (
+                <ArticleIndex {...props} account={this.state.account} editorContract={this.state.editorContract} />
+              )}
+            />
             {/* <Route exact path="/publisher/:publisher_address/team" component={TeamIndex} /> */}
 
             {/* The diff page for an article versus different hashes */}

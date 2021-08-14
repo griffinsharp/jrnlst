@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom";
+
 import { Drawer, Button } from 'antd';
+import { CloseOutlined, MenuFoldOutlined } from '@ant-design/icons';
+
+import '../global.css';
 
 class NavBar extends Component {
 
@@ -8,36 +13,43 @@ class NavBar extends Component {
     this.state = {
       visible: false
     }
-
-    this.handleNavClick = this.handleNavClick.bind(this);
   }
 
   toggleDrawer() {
     this.setState({visible: !this.state.visible});
   }
 
-  handleNavClick() {
-    this.toggleDrawer();
-    // Do navigation based on argument
-  }
-
   render() {
     return (
-      <div>
-        <Button placement="right" type="primary" onClick={() => this.toggleDrawer()}>
-          Open
-        </Button>
-        <Drawer
-          title="Welcome"
-          placement="right"
-          closable={false}
-          onClose={() => this.toggleDrawer()}
-          visible={this.state.visible}
-          >
-          <p onClick={this.handleNavClick}>My Articles</p>
-          <p onClick={this.handleNavClick}>My Publishers</p>
-          <p onClick={this.handleNavClick}>Explore Articles</p>
-        </Drawer>
+      <div className='flexSpaceBetween'>
+        <div><Link to='/'>LOGO</Link></div>
+        <div>
+          <Button
+            size='large'
+            icon={<MenuFoldOutlined />}
+            placement='right'
+            type='primary'
+            onClick={() => this.toggleDrawer() }
+            >
+            Explore
+          </Button>
+          <Drawer
+            title="✍️ &nbsp; Welcome!"
+            placement="right"
+            closable={true}
+            closeIcon={<CloseOutlined />}
+            onClose={() => this.toggleDrawer()}
+            visible={this.state.visible}
+            >
+            <Link to={`/author/${this.props.account}/articles`} >
+              <p onClick={() => this.toggleDrawer()}>My Articles</p>
+            </Link>
+
+            {/* Add links to the below once views are built. */}
+            <p onClick={() => this.toggleDrawer()}>My Publishers</p>
+            <p onClick={() => this.toggleDrawer()}>Explore Articles</p>
+          </Drawer>
+        </div>
       </div>
     );
   }

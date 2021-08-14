@@ -1,0 +1,10 @@
+/* Global Util Styles */
+.flexSpaceBetween {
+  display: flex;
+  justify-content: space-between;
+}
+
+.flexEnd {
+  display: flex;
+  justify-content: flex-end;
+}
