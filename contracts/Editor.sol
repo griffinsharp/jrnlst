@@ -224,6 +224,20 @@ contract Editor is Ownable {
         emit ArticleEdited(_articleId, block.timestamp, msg.sender, articles[_articleId].publicationAddress);
     }
 
+    /// @notice Getter function for the articles.
+    /// @dev Returns the public 'articles' variable.
+    /// @return Array of all articles.
+    function getArticles() public view returns(Article[] memory) {
+        return articles;
+    }
+
+    /// @notice Getter function authorAddressToArticleIds mapping.
+    /// @dev Returns the public 'articles' variable.
+    /// @return Array of all articles.
+    function getArticleIdsFromAuthorAddress(address _authorAddress) public view returns(uint[] memory) {
+        return authorAddressToArticleIds[_authorAddress];
+    }
+
     /// @notice View function that checks if the current user is a publisher account.
     /// @dev Used via UI ONLY. Use modifiers for function checks.
     /// @return True if publisher account. False is not.
@@ -235,12 +249,6 @@ contract Editor is Ownable {
         }
 
         return false;
-    }
-
-    /// @notice Getter function for the articles
-    /// @dev Returns the public articles variable
-    function getArticles() public returns(Article[] memory) {
-        return articles;
     }
 
     // PRIVATE FUNCTIONS ---

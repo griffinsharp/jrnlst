@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react'
 import client from '../../utils/ipfs';
 import Modal from '../modal/Modal';
