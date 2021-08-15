@@ -120,10 +120,12 @@ class App extends Component {
           <NavBar account={this.state.account} />
           <Switch>
             {/* Author Private Routes // Only SPECIFIC author should need to see these. */}
-            <ProtectedAuthorRoute
-              getAccounts={this.getAccounts}
+            <GenericAuthorRoute
+              account={this.state.account}
+              editorContract={this.state.editorContract}
               component={ArticleUpdateForm}
               exact={true}
+              isAuthor={this.isAuthor}
               path="/author/:author_address/articles/:id/edit"
             />
 

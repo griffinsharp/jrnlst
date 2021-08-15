@@ -259,4 +259,10 @@ contract Editor is Ownable {
     function _addArticleHash(uint _articleId, bytes memory _articleHash) private {
         articleIdToHashes[_articleId].push(_articleHash);
     }
+
+    /// @notice Getter function for the article hashes
+    /// @dev Returns the public article hash
+    function getArticleHash(uint _articleId) public returns(bytes[] memory) {
+        return articleIdToHashes[_articleId];
+    }
 }

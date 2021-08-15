@@ -6,7 +6,7 @@ class TextBox extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: ''
+      text: null
     }
   }
 
@@ -15,7 +15,7 @@ class TextBox extends Component {
       <div>
         <TextArea
           style={{ width: "60%", height: "600px" }}
-          value={this.state.text}
+          value={this.state.text != null ? this.state.text : this.props.value}
           onChange={(e) => this.setState({ text: e.target.value })}
         />
         <div>
