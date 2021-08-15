@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import ArticleCreateForm from './editor/ArticleCreateForm';
+import ArticleDiff from './diff/ArticleDiff';
 import ArticleIndex from './lists/ArticleIndex';
 import ArticleUpdateForm from './editor/ArticleUpdateForm';
 import Home from './Home';
@@ -148,7 +149,13 @@ class App extends Component {
             {/* <Route exact path="/publisher/:publisher_address/team" component={TeamIndex} /> */}
 
             {/* The diff page for an article versus different hashes */}
-            {/* <Route exact path="/author/:author_address/articles/:id" component={DiffArticle} /> */}
+            <Route
+              exact
+              path="/author/:author_address/articles/:id"
+              render={props => (
+                <ArticleDiff {...props} account={this.state.account} editorContract={this.state.editorContract} />
+              )}
+            />
 
             {/* All of a publisher's articles */}
             {/* <Route exact path="/publisher/:publisher_address/articles" component={ArticleIndex} /> */}

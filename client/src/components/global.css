@@ -8,3 +8,12 @@
   display: flex;
   justify-content: flex-end;
 }
+
+.width100 {
+  width: 100%;
+}
+
+.maxWidth50 {
+  width: 100%;
+  max-width: 50%;
+}
