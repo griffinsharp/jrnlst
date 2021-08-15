@@ -15,7 +15,7 @@ class ArticleCreateForm extends Component {
       isLoading: false,
       showModal: false,
       txnHash:'0x0000000000000000000000000000000000000000',
-      ipfsHash: '',
+      ipfsHash: ''
     }
 
     this.uploadFileToIPFS = this.uploadFileToIPFS.bind(this);
@@ -43,9 +43,6 @@ class ArticleCreateForm extends Component {
       this.setState({showModal: true, txnHash: hash});
     })
   }
-
-
-
 
   render() {
     return (

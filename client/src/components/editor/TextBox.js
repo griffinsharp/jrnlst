@@ -5,6 +5,7 @@ const { TextArea } = Input;
 class TextBox extends Component {
   constructor(props) {
     super(props);
+    // TODO: Fix mixing props and state.
     this.state = {
       text: null
     }

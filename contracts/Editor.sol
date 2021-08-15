@@ -142,6 +142,28 @@ contract Editor is Ownable {
         _;
     }
 
+    // EXTERNAL FUNCTIONS ---
+    /// @notice Getter function for the articles.
+    /// @dev Returns the public 'articles' variable. Called by frontend (external).
+    /// @return Array of all articles.
+    function getArticles() external view returns(Article[] memory) {
+        return articles;
+    }
+
+    /// @notice Getter function for authorAddressToArticleIds mapping.
+    /// @dev Called by frontend (external).
+    /// @return Array of all articles.
+    function getArticleIdsFromAuthorAddress(address _authorAddress) external view returns(uint[] memory) {
+        return authorAddressToArticleIds[_authorAddress];
+    }
+
+    /// @notice Getter function for articleIdToHashes mapping.
+    /// @dev Called by frontend (external).
+    /// @return Array of all the hashes (versions) of an article.
+    function getHashesFromArticleId(uint _articleId) external view returns(bytes[] memory) {
+        return articleIdToHashes[_articleId];
+    }
+
     // PUBLIC FUNCTIONS ---
     /// @notice Adds an author to a publication's approved authors. Can only be called by a publication.
     /// @dev We only check if its a publication, not a specific publication, since we use msg.sender to add to the authors array. Only adds non-publishers.
@@ -224,20 +246,6 @@ contract Editor is Ownable {
         emit ArticleEdited(_articleId, block.timestamp, msg.sender, articles[_articleId].publicationAddress);
     }
 
-    /// @notice Getter function for the articles.
-    /// @dev Returns the public 'articles' variable.
-    /// @return Array of all articles.
-    function getArticles() public view returns(Article[] memory) {
-        return articles;
-    }
-
-    /// @notice Getter function authorAddressToArticleIds mapping.
-    /// @dev Returns the public 'articles' variable.
-    /// @return Array of all articles.
-    function getArticleIdsFromAuthorAddress(address _authorAddress) public view returns(uint[] memory) {
-        return authorAddressToArticleIds[_authorAddress];
-    }
-
     /// @notice View function that checks if the current user is a publisher account.
     /// @dev Used via UI ONLY. Use modifiers for function checks.
     /// @return True if publisher account. False is not.
@@ -258,11 +266,5 @@ contract Editor is Ownable {
     /// @param _articleHash The hash of the article's text
     function _addArticleHash(uint _articleId, bytes memory _articleHash) private {
         articleIdToHashes[_articleId].push(_articleHash);
-    }
-
-    /// @notice Getter function for the article hashes
-    /// @dev Returns the public article hash
-    function getArticleHash(uint _articleId) public returns(bytes[] memory) {
-        return articleIdToHashes[_articleId];
     }
 }
