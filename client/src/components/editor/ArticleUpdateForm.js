@@ -35,7 +35,7 @@ class ArticleUpdateForm extends Component {
   }
 
   getArticleHash = () => {
-    const articleHashPromise = this.props.editorContract.methods.getArticleHash(this.props.match.params.id).call().then((articleHash) => {
+    const articleHashPromise = this.props.editorContract.methods.getHashesFromArticleId(this.props.match.params.id).call().then((articleHash) => {
       this.setState({
         ipfsHash: window.web3.utils.hexToAscii(articleHash[articleHash.length - 1])
       });
@@ -52,11 +52,18 @@ class ArticleUpdateForm extends Component {
     });
   }
 
+  async componentDidMount() {
+    if (this.props.editorContract.methods) {
+      this.getArticleHash();
+      this.getArticles();
+    }
+  }
+
   async componentDidUpdate(prevProps, prevState) {
     // Cannot use onMount here because App needs a moment to async fetch web3 and the contract.
     if (this.props.editorContract !== prevProps.editorContract) {
-        this.getArticleHash();
-        this.getArticles();
+      this.getArticleHash();
+      this.getArticles();
     }
     if (prevState.ipfsHash != this.state.ipfsHash) {
       const article = await this.getFromIPFS(this.state.ipfsHash);
