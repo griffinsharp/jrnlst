@@ -98,7 +98,9 @@ class ArticleUpdateForm extends Component {
       {this.state.showModal && (
         <>
           <div className="ArticleCreateForm--modal" onClick={() => this.setState({showModal: false})}/>
-          <Modal dismissModal={() => this.setState({showModal: false})} txnHash={this.state.txnHash} articleName={this.state.articleName} ipfsHash={this.state.ipfsHash} />
+          <Modal dismissModal={() => this.setState({showModal: false})} txnHash={this.state.txnHash} articleName={this.state.articleName} ipfsHash={this.state.ipfsHash} >
+            Your article, <b><i>{this.state.articleName}</i></b>, was successfully updated and can be found with the transaction hash below.
+          </Modal>
         </>
       )}
 

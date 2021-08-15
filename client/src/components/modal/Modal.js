@@ -25,7 +25,7 @@ class Modal extends Component {
 
         <div className="Modal--body">
             <p >
-                Your article, <b><i>{this.props.articleName}</i></b>, was successfully submitted and can be found with the transaction hash below.
+                {this.props.children}
             </p>
         </div>
         <div className="Modal--body">
