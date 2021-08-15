@@ -1,7 +1,12 @@
 /* Global Util Styles */
-.flexSpaceBetween {
+.flexAlignItems {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+}
+
+.flexCol {
+  display: flex;
+  flex-direction: column;
 }
 
 .flexEnd {
@@ -9,11 +14,21 @@
   justify-content: flex-end;
 }
 
-.width100 {
-  width: 100%;
+.flexJustifyCenter {
+  display: flex;
+  justify-content: center;
+}
+
+.flexSpaceBetween {
+  display: flex;
+  justify-content: space-between;
 }
 
 .maxWidth50 {
   width: 100%;
   max-width: 50%;
+}
+
+.width100 {
+  width: 100%;
 }
