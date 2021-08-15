@@ -9,7 +9,6 @@ import './ArticleCreateForm.css';
 class ArticleUpdateForm extends Component {
   constructor(props) {
     super(props);
-
     this.state = {
       articleName: '',
       publicationAddress: '',
@@ -35,22 +34,29 @@ class ArticleUpdateForm extends Component {
     }
   }
 
+  getArticleHash = () => {
+    const articleHashPromise = this.props.editorContract.methods.getArticleHash(this.props.match.params.id).call().then((articleHash) => {
+      this.setState({
+        ipfsHash: window.web3.utils.hexToAscii(articleHash[articleHash.length - 1])
+      });
+    });
+  }
+
+  getArticles = () => {
+    const articlesPromise = this.props.editorContract.methods.getArticles().call().then((articles) => {
+      const currentArticle = articles[this.props.match.params.id]
+      this.setState({
+        articleName: currentArticle[0],
+        publicationAddress: currentArticle[2],
+      })
+    });
+  }
+
   async componentDidUpdate(prevProps, prevState) {
     // Cannot use onMount here because App needs a moment to async fetch web3 and the contract.
     if (this.props.editorContract !== prevProps.editorContract) {
-        const articleHashPromise = this.props.editorContract?.methods?.getArticleHash(this.props.match.params.id).call().then((articleHash) => {
-          this.setState({
-            ipfsHash: window.web3.utils.hexToAscii(articleHash[articleHash.length - 1])
-          });
-        });
-        const articlesPromise = this.props.editorContract?.methods?.getArticles().call().then((articles) => {
-          console.log(articles)
-          const currentArticle = articles[this.props.match.params.id]
-          this.setState({
-            articleName: currentArticle[0],
-            publicationAddress: currentArticle[2],
-          })
-        });
+        this.getArticleHash();
+        this.getArticles();
     }
     if (prevState.ipfsHash != this.state.ipfsHash) {
       const article = await this.getFromIPFS(this.state.ipfsHash);
@@ -98,8 +104,7 @@ class ArticleUpdateForm extends Component {
             Publication Address: {this.state.publicationAddress}
           </h3>
         </div>
-        {this.state.article && (<TextBox isLoading={this.state.isLoading} uploadFileToIPFS={this.uploadFileToIPFS} value={this.state.article}/>)}
-        {!this.state.article && (<TextBox isLoading={this.state.isLoading} uploadFileToIPFS={this.uploadFileToIPFS} />)}
+        <TextBox isLoading={this.state.isLoading} uploadFileToIPFS={this.uploadFileToIPFS} value={this.state.article}/>
       </div>
       </>
     );
