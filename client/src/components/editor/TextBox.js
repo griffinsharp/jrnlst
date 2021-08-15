@@ -6,7 +6,7 @@ class TextBox extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: ''
+      text: this.props.value
     }
   }
 
