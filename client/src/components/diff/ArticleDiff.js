@@ -112,7 +112,7 @@ class ArticleDiff extends Component {
   // TODO: Rework
   _getDiffView() {
     if (!this.state.articleOneText || !this.state.articleTwoText) return (<div className="noBorderWrapper"><Card title="Comparing Articles" bordered={false} className='width100'>Select two articles to compare above.</Card></div>);
-    const diff = Diff.diffWords(this.state.articleTwoText, this.state.articleOneText);
+    const diff = Diff.diffSentences(this.state.articleTwoText, this.state.articleOneText);
     let collectedNodes = [];
     diff.forEach((part) => {
       const color = part.added ? 'green' :

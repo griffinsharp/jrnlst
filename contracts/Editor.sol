@@ -243,6 +243,8 @@ contract Editor is Ownable {
     /// @param _articleHash The hash of the new version of the article's text
     function updateArticle(uint _articleId, bytes memory _articleHash) public onlyAuthorOfArticle(_articleId) isValidHash(_articleHash) {
         _addArticleHash(_articleId, _articleHash);
+        Article storage editedArticle = articles[_articleId];
+        editedArticle.timeUpdated = block.timestamp;
         emit ArticleEdited(_articleId, block.timestamp, msg.sender, articles[_articleId].publicationAddress);
     }
 

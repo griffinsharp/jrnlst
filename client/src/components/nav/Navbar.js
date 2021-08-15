@@ -5,6 +5,7 @@ import { Drawer, Button } from 'antd';
 import { CloseOutlined, MenuFoldOutlined } from '@ant-design/icons';
 
 import '../global.css';
+import logo from './logo.png';
 
 class NavBar extends Component {
 
@@ -22,7 +23,11 @@ class NavBar extends Component {
   render() {
     return (
       <div className='flexSpaceBetween'>
-        <div><Link to='/'>LOGO</Link></div>
+        <div>
+          <Link to='/'>
+            <img style={{ width: '50px', margin: '5px' }} src={logo}></img>
+          </Link>
+        </div>
         <div>
           <Button
             size='large'
