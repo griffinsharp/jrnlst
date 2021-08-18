@@ -1,33 +1,31 @@
-# ipfs-journal
-hackathon
+<img src="https://user-images.githubusercontent.com/48870544/129845088-71c8ef17-6979-4c12-b67f-f6fa9259f5a1.png" height="100px" width="100px"/>
 
-**truffle console**
+# jrnlst
+Entry for the [IPFS hackathon](https://hackfs.com/) (7/30/21 - 8/15/21) presented by [@ethglobal](https://github.com/ethglobal) and [@protocol](https://github.com/protocol).
 
-start: truffle develop
+## Elevator Pitch 
+A decentralized text differencing and change tracking tool to compare immutable versions of text. Built for journalists and publishers in an effort to foster transparency in corrections, retractions and updates made to published pieces. Think of git diffs, but for articles.
 
-compile
+## Demo
+[Video Demo](https://www.youtube.com/watch?v=pc4Sf__ZTMo)
 
-migrate
+## Developers
+[@griffinsharp](https://github.com/griffinsharp) - Solidity/Smart Contracts / React / Web3.js
 
-**in another terminal (i.e. not in the truffle develop prompt)**
+[@rileydcampbell](https://github.com/rileydcampbell) - React / Web3.js / IPFS
 
-cd client
-npm run start
+## Setup Instructions
+### Smart Contracts / Truffle
 
-**inside the development console**
+1. truffle console
 
-test
+2. compile
 
-**outside the development console..**
+3. migrate --reset
 
-truffle test
-Jest is included for testing React components. Compile your contracts before running Jest, or you may receive some file not found errors.
+### Frontend
+1. cd client
 
-**ensure you are inside the client directory when running this**
+2. npm install
 
-npm run test
-To build the application for production, use the build script. A production build will be in the client/build folder.
-
-**ensure you are inside the client directory when running this**
-
-npm run build
+3. npm run start
