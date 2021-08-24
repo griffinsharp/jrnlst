@@ -84,9 +84,7 @@ class App extends Component {
       this.setState({ accountValue: ethBalance });
     } catch (error) {
       // Catch any errors for any of the above operations.
-      alert(
-        'Failed to load web3, accounts, or contract. Check console for details.',
-      );
+      alert('Failed to load web3, accounts, or contract. Check console for details.');
       console.error(error);
     }
   }
@@ -121,6 +119,7 @@ class App extends Component {
           <NavBar account={this.state.account} />
           <Switch>
             {/* Author Private Routes // Only SPECIFIC author should need to see these. */}
+            {/* TODO - Add back private to below route. */}
             <GenericAuthorRoute
               account={this.state.account}
               editorContract={this.state.editorContract}
