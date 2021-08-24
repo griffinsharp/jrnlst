@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { Link } from "react-router-dom";
 
 import { dateToTimeString } from '../../utils/dateFormat';
+import { List, Skeleton } from 'antd';
 
-import { List, Avatar, Button, Skeleton } from 'antd';
 import './ArticleIndex.css';
 
 class ArticleIndex extends Component {
@@ -32,23 +32,29 @@ class ArticleIndex extends Component {
   }
 
   async fetchArticles(contract, authorAddress) {
-    const articleIds = await contract.methods.getArticleIdsFromAuthorAddress(authorAddress).call();
-    if (!articleIds.length) {
-      this.setState({isLoading: false});
-    } else {
-      const returnedArr = await articleIds.map(async (id) => {
-        const article = await contract.methods.articles(id).call();
-        return {
-          authorAddress: article.authorAddress,
-          articleId: id,
-          articleName: article.articleName,
-          publicationAddress: article.publicationAddress,
-          timePosted: article.timePosted,
-          timeUpdated: article.timeUpdated
-        };
-      });
+    try {
+      const articleIds = await contract.methods.getArticleIdsFromAuthorAddress(authorAddress).call();
 
-      Promise.all(returnedArr).then(articles => this.setState({articles, isLoading: false}));
+      if (!articleIds.length) {
+        this.setState({isLoading: false});
+      } else {
+        const returnedArr = await articleIds.map(async (id) => {
+          const article = await contract.methods.articles(id).call();
+          return {
+            authorAddress: article.authorAddress,
+            articleId: id,
+            articleName: article.articleName,
+            publicationAddress: article.publicationAddress,
+            timePosted: article.timePosted,
+            timeUpdated: article.timeUpdated
+          };
+        });
+
+        Promise.all(returnedArr).then(articles => this.setState({articles, isLoading: false}));
+      }
+    } catch (e) {
+      this.setState({ isLoading: false });
+      console.log(e);
     }
   }
 
@@ -67,7 +73,7 @@ class ArticleIndex extends Component {
         className="margin45"
         loading={this.state.isLoading}
         itemLayout="horizontal"
-        // loadMore={loadMore} - TODO: Can add pagiation later.
+        // loadMore={loadMore} - TODO: Add pagination.
         dataSource={this.state.articles}
         renderItem={item => (
           <List.Item
@@ -95,7 +101,7 @@ class ArticleIndex extends Component {
   _getNoArticlesView() {
     const isUser = (this.props.account === this.props.match.params.author_address);
     return isUser
-      ? <p>You have not authored any articles yet. <Link to={`/author/articles/new`}>Click here to write your first!</Link></p>
+      ? <p>You have not authored an article yet. <Link to={`/author/articles/new`}>Click here to write your first!</Link></p>
       : <p>User has not authored any articles yet.</p>;
   }
 
@@ -106,7 +112,6 @@ class ArticleIndex extends Component {
       </div>
     );
   }
-
 }
 
 export default ArticleIndex;

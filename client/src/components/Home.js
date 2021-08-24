@@ -16,9 +16,9 @@ class Home extends Component {
 
   render() {
     return(
-      <div class="flexAlignItems flexCol">
+      <div className="flexAlignItems flexCol">
         <p>Welcome! Click below to get started.</p>
-        <div class="flexJustifyCenter">
+        <div className="flexJustifyCenter">
           <Link to="/author/articles/new">
             <Button type="primary">New Article</Button>
           </Link>
@@ -28,7 +28,6 @@ class Home extends Component {
       </div>
     )
   }
-
 }
 
 export default Home;
