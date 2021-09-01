@@ -9,34 +9,36 @@ import './ArticleCreateForm.css';
 class ArticleUpdateForm extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      articleName: '',
-      publicationAddress: '',
-      isLoading: false,
-      showModal: false,
-      txnHash:'0x0000000000000000000000000000000000000000',
-      ipfsHash: '',
       article: '',
+      articleName: '',
+      ipfsHash: '',
+      isLoading: false,
+      publicationAddress: '',
+      showModal: false,
+      txnHash:'0x0000000000000000000000000000000000000000'
     }
+
     this.uploadFileToIPFS = this.uploadFileToIPFS.bind(this);
   }
 
   // LIFECYCLE
   async componentDidMount() {
     if (this.props.editorContract.methods) {
-      this.getArticleHashAndText();
-      this.getArticles();
+      this._getArticleHashAndText();
+      this._getArticles();
     }
   }
 
   async componentDidUpdate(prevProps) {
     if (this.props.editorContract !== prevProps.editorContract) {
-      this.getArticleHashAndText();
-      this.getArticles();
+      this._getArticleHashAndText();
+      this._getArticles();
     }
   }
 
-  async getFromIPFS(hashToGet) {
+  async _getFromIPFS(hashToGet) {
     for await (const file of client.get(hashToGet)) {
 
       if (!file.content) continue;
@@ -50,18 +52,23 @@ class ArticleUpdateForm extends Component {
     }
   }
 
-  getArticleHashAndText = () => {
+  _getArticleHashAndText() {
     this.props.editorContract.methods.getHashesFromArticleId(this.props.match.params.id).call().then((articleHash) => {
       const lastIpfsHash = window.web3.utils.hexToAscii(articleHash[ articleHash.length - 1 ]);
-      this.getFromIPFS(lastIpfsHash).then(article => {
-        this.setState({article: article.toString(), ipfsHash: lastIpfsHash})
+      this._getFromIPFS(lastIpfsHash).then(article => {
+        this.setState({
+          article: article.toString(),
+          ipfsHash: lastIpfsHash
+        })
       });
     });
   }
 
-  getArticles = () => {
+  _getArticles() {
     this.props.editorContract.methods.getArticles().call().then((articles) => {
-      const currentArticle = articles[this.props.match.params.id]
+      const currentArticle = articles[this.props.match.params.id];
+
+      // Article struct values correspond to array indexes
       this.setState({
         articleName: currentArticle[0],
         publicationAddress: currentArticle[2],
@@ -85,7 +92,6 @@ class ArticleUpdateForm extends Component {
   updateFileOnContract(articleCID) {
     const hexArticleCID = window.web3.utils.asciiToHex(articleCID)
     this.props.editorContract.methods.updateArticle(this.props.match.params.id, hexArticleCID).send({ from: this.props.account }).on('transactionHash', (hash) => {
-      console.log('transactionHash: ', hash);
       this.setState({showModal: true, txnHash: hash});
     })
   }
